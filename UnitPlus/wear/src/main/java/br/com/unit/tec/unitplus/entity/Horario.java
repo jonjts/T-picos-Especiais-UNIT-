@@ -1,0 +1,100 @@
+package br.com.unit.tec.unitplus.entity;
+
+
+/**
+ * Created by jon_j on 01/11/2015.
+ */
+public class Horario {
+
+    private Long id;
+
+    private Long idUsuario;
+
+    private Diciplina diciplina;
+
+    private Integer hora;
+
+    private Integer minutos;
+
+    private Integer diaSemana;
+
+    private String local;
+
+    public Horario() {
+    }
+
+    public Horario(Long id, Long idUsuario, Diciplina diciplina, Integer hora, Integer minutos, Integer diaSemana, String local) {
+        this.id = id;
+        this.idUsuario = idUsuario;
+        this.diciplina = diciplina;
+        this.hora = hora;
+        this.minutos = minutos;
+        this.diaSemana = diaSemana;
+        this.local = local;
+    }
+
+    public Horario(Long idUsuario, Diciplina diciplina, Integer hora, Integer minutos, Integer diaSemana, String local) {
+        this.idUsuario = idUsuario;
+        this.diciplina = diciplina;
+        this.hora = hora;
+        this.minutos = minutos;
+        this.diaSemana = diaSemana;
+        this.local = local;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public Diciplina getDiciplina() {
+        return diciplina;
+    }
+
+    public void setDiciplina(Diciplina diciplina) {
+        this.diciplina = diciplina;
+    }
+
+    public Integer getHora() {
+        return hora;
+    }
+
+    public void setHora(Integer hora) {
+        this.hora = hora;
+    }
+
+    public Integer getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(Integer minutos) {
+        this.minutos = minutos;
+    }
+
+    public Integer getDiaSemana() {
+        return diaSemana;
+    }
+
+    public void setDiaSemana(Integer diaSemana) {
+        this.diaSemana = diaSemana;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+}
