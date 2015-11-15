@@ -34,10 +34,8 @@ public class ElementGridPagerAdapter extends FragmentGridPagerAdapter {
 
         this.mBackgroundDrawable = mContext.getResources().getDrawable(R.drawable.wearmenu_background);
 
-        //Construit le tableau des éléménts à afficher
         for (Element element : elements) {
             mRows.add(new Row(
-                            //pour l'instant nous ne mettrons qu'un élément par ligne
                             CardFragment.create(element.getTitre(), element.getTexte()),
                             createActionFragment()
                     )
@@ -55,14 +53,12 @@ public class ElementGridPagerAdapter extends FragmentGridPagerAdapter {
         };
     }
 
-    //Le fragment à afficher
     @Override
     public Fragment getFragment(int row, int col) {
         Row adapterRow = mRows.get(row);
         return adapterRow.getColumn(col);
     }
 
-    //le drawable affichée en background pour la ligne [row]
     @Override
     public Drawable getBackgroundForRow(final int row) {
         return mBackgroundDrawable;
@@ -70,25 +66,19 @@ public class ElementGridPagerAdapter extends FragmentGridPagerAdapter {
 
     @Override
     public Drawable getBackgroundForPage(final int row, final int column) {
-        //nous pouvons spécifier un drawable différent pour le swipe horizontal
         return getBackgroundForRow(row);
     }
 
-    //Le nombre de lignes dans la grille
     @Override
     public int getRowCount() {
         return mRows.size();
     }
 
-    //Le nombre de colonnes par ligne
     @Override
     public int getColumnCount(int rowNum) {
         return mRows.get(rowNum).getColumnCount();
     }
 
-    /**
-     * Représentation d'une ligne - Contient une liste de fragments
-     */
     private class Row {
         final List<Fragment> columns = new ArrayList<Fragment>();
 

@@ -6,8 +6,9 @@ package br.com.unit.tec.unitplus.constants;
 public class Constants {
 
     public static final String USER_NAME = "/user_name";
+    public static final String HORARIOS = "/horarios";
+    public static final String NOTAS = "/notas";
 
-
-    public static final String JSON_RESPONSE = "response";
+    public static final String PREFERENCE_USER_NAME = "userName";
 }
 

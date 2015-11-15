@@ -40,4 +40,15 @@ public class HorariosControl {
         return horarios;
     }
 
+    public List<Horario> get(Long idUsuario){
+        QueryBuilder<Horario, Long> horarioLongQueryBuilder = dao.queryBuilder();
+        List<Horario> horarios = null;
+        try {
+            horarios = horarioLongQueryBuilder.where().eq("id_usuario", idUsuario).query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return horarios;
+    }
+
 }

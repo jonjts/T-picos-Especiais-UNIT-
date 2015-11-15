@@ -3,8 +3,10 @@ package br.com.unit.tec.unitplus;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.wearable.view.DotsPageIndicator;
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import br.com.unit.tec.unitplus.adapter.ElementGridPagerAdapter;
 import br.com.unit.tec.unitplus.constants.Constants;
 import br.com.unit.tec.unitplus.entity.Element;
+import br.com.unit.tec.unitplus.util.Util;
 import br.com.unit.tec.unitplus.wearmenu.WearMenu;
 
 public class MainActivity extends Activity implements MessageApi.MessageListener{
@@ -66,10 +69,14 @@ public class MainActivity extends Activity implements MessageApi.MessageListener
                 new String[]{
                         "Notas",
                         "Horários",
+                        "Encontrar UNIT",
+                        "Voltar"
                 },
                 new Drawable[]{
                         getResources().getDrawable(R.drawable.ic_notas, null),
                         getResources().getDrawable(R.drawable.ic_horario, null),
+                        getResources().getDrawable(R.mipmap.ic_marker, null),
+                        getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha, null),
                 }
         );
         wearMenu.setWearMenuListener(new WearMenu.WearMenuListener() {
@@ -77,9 +84,18 @@ public class MainActivity extends Activity implements MessageApi.MessageListener
             public void onWearMenuListClicked(int position) {
                 switch (position) {
                     case 0:
+                        getNotas();
                         break;
                     case 1:
-                        getUserName();
+                        getDiciplinas();
+                        break;
+                    case 2:
+                        Uri gmmIntentUri = Uri.parse("geo:-10.9698107,-37.0609247");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        startActivity(mapIntent);
+                        break;
+                    case 3:
+                        wearMenu.toggle();
                         break;
                 }
             }
@@ -121,7 +137,7 @@ public class MainActivity extends Activity implements MessageApi.MessageListener
                 .build();
     }
 
-    private void getUserName() {
+    private void getNotas() {
         if (nodeId != null) {
             new Thread(new Runnable() {
                 @Override
@@ -129,7 +145,22 @@ public class MainActivity extends Activity implements MessageApi.MessageListener
                     if (googleApiClient != null && !(googleApiClient.isConnected() || googleApiClient.isConnecting()))
                         googleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
 
-                    Wearable.MessageApi.sendMessage(googleApiClient, nodeId, Constants.USER_NAME, null).await();
+                    Wearable.MessageApi.sendMessage(googleApiClient, nodeId, Constants.NOTAS, null).await();
+                    googleApiClient.disconnect();
+                }
+            }).start();
+        }
+    }
+
+    private void getDiciplinas() {
+        if (nodeId != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (googleApiClient != null && !(googleApiClient.isConnected() || googleApiClient.isConnecting()))
+                        googleApiClient.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+
+                    Wearable.MessageApi.sendMessage(googleApiClient, nodeId, Constants.HORARIOS, null).await();
                     googleApiClient.disconnect();
                 }
             }).start();
@@ -149,7 +180,7 @@ public class MainActivity extends Activity implements MessageApi.MessageListener
     private List<Element> creerListElements() {
         List<Element> list = new ArrayList<>();
 
-        list.add(new Element("Bem Vindo", "", Color.parseColor("#F44336")));
+        list.add(new Element("Bem Vindo", Util.getUserName(this), Color.parseColor("#F44336")));
 
         return list;
     }

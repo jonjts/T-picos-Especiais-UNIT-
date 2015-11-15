@@ -126,8 +126,8 @@ public class WearMenu extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    private void setContentView(int layoutId){
-        if(menuView != null){
+    private void setContentView(int layoutId) {
+        if (menuView != null) {
             menuView.setVisibility(GONE);
             removeView(menuView);
             menuView = null;
@@ -226,7 +226,7 @@ public class WearMenu extends FrameLayout implements View.OnClickListener {
                     menuView.setVisibility(VISIBLE);
                     animator.start();
                 }
-            }else{
+            } else {
 
             }
         }
@@ -256,7 +256,7 @@ public class WearMenu extends FrameLayout implements View.OnClickListener {
     }
 
     public boolean isClickEnabled() {
-        if(mGridViewPager != null)
+        if (mGridViewPager != null)
             return enableClick && mGridViewPager.getCurrentItem().x == 0;
         else
             return enableClick;
@@ -322,25 +322,25 @@ public class WearMenu extends FrameLayout implements View.OnClickListener {
 
     //endregion
 
-    public void setMenuElements(String[] titles){
-        if(titles != null)
+    public void setMenuElements(String[] titles) {
+        if (titles != null)
             setMenuElements(Arrays.asList(titles));
     }
 
-    public void setMenuElements(String[] titles, Drawable[] drawables){
-        if(titles != null)
-            setMenuElements(Arrays.asList(titles),Arrays.asList(drawables));
+    public void setMenuElements(String[] titles, Drawable[] drawables) {
+        if (titles != null)
+            setMenuElements(Arrays.asList(titles), Arrays.asList(drawables));
     }
 
     public void setMenuElements(List<String> titles) {
-        this.setMenuElements(titles,null);
+        this.setMenuElements(titles, null);
     }
 
 
-    public void setMenuElements(List<String> titles, List<Drawable> drawables){
+    public void setMenuElements(List<String> titles, List<Drawable> drawables) {
         setContentView(R.layout.wearmenu_list);
 
-        if(mListBackgroundId > 0)
+        if (mListBackgroundId > 0)
             findViewById(R.id.wearmenu_listview_container).setBackgroundResource(mListBackgroundId);
 
         WearableListView listView = (WearableListView) findViewById(R.id.wearmenu_listview);
@@ -348,7 +348,7 @@ public class WearMenu extends FrameLayout implements View.OnClickListener {
         listView.setClickListener(new WearableListView.ClickListener() {
             @Override
             public void onClick(WearableListView.ViewHolder viewHolder) {
-                if(mWearMenuListener != null)
+                if (mWearMenuListener != null)
                     mWearMenuListener.onWearMenuListClicked(viewHolder.getPosition());
                 toggle();
             }
@@ -360,7 +360,7 @@ public class WearMenu extends FrameLayout implements View.OnClickListener {
         });
     }
 
-    public interface WearMenuListener{
+    public interface WearMenuListener {
         public void onWearMenuListClicked(int position);
     }
 }

@@ -3,9 +3,14 @@ package br.com.unit.tec.unitplus;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Build;
@@ -21,8 +26,15 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 import com.rey.material.app.Dialog;
 import com.rey.material.widget.CheckBox;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import br.com.unit.tec.unitplus.constants.Constants;
 import br.com.unit.tec.unitplus.entity.Usuario;
@@ -40,10 +52,15 @@ public class LoginActivity extends AppCompatActivity implements IConsult {
     private View mLoginFormView;
     private MenuItem menuItem;
 
+    private GoogleApiClient googleApiClient;
+    private String nodeId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        initGoogleApiClient();
 
         mMatricula = (EditText) findViewById(R.id.matricula);
         manterLogado = (CheckBox) findViewById(R.id.manter_logado);
@@ -62,15 +79,13 @@ public class LoginActivity extends AppCompatActivity implements IConsult {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.progress_view);
-
-        checkIfLogout();
-
     }
 
     private void checkIfLogout() {
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.containsKey(Constants.LOGOUT)) {
             Snackbar.make(mPasswordView, "Logout efetuado com sucesso.", Snackbar.LENGTH_LONG).show();
+            sendUserNameToWear("");
         }
     }
 
@@ -187,8 +202,10 @@ public class LoginActivity extends AppCompatActivity implements IConsult {
         Usuario usuario = ((Usuario) object);
         if (manterLogado.isChecked()) {
             Util.saveUserId(usuario.getLogin(), this);
+            sendUserNameToWear(usuario.getNome());
         }
 
+        throwNotification(usuario.getNome());
         Bundle bundle = new Bundle();
         bundle.putLong(Constants.PREFERENCE_ID, usuario.getLogin());
         bundle.putString(Constants.PREFERENCE_NOME, usuario.getNome());
@@ -196,6 +213,19 @@ public class LoginActivity extends AppCompatActivity implements IConsult {
         it.putExtras(bundle);
         startActivity(it);
         finish();
+    }
+
+    private void throwNotification(String userName) {
+        NotificationCompat.Builder notification_builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Bem vindo")
+                .setContentText(userName)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true);
+
+
+        NotificationManagerCompat notification_manager = NotificationManagerCompat.from(this);
+        notification_manager.notify(0, notification_builder.build());
     }
 
     @Override
@@ -213,6 +243,57 @@ public class LoginActivity extends AppCompatActivity implements IConsult {
                 .positiveAction("OK")
                 .cancelable(false)
                 .show();
+    }
+
+    private void initGoogleApiClient() {
+        googleApiClient = getGoogleApiClient(this);
+        retrieveDeviceNode();
+    }
+
+    private GoogleApiClient getGoogleApiClient(Context context) {
+        return new GoogleApiClient.Builder(context)
+                .addApi(Wearable.API)
+                .build();
+    }
+
+    private void retrieveDeviceNode() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (googleApiClient != null && !(googleApiClient.isConnected() || googleApiClient.isConnecting()))
+                    googleApiClient.blockingConnect(100, TimeUnit.MILLISECONDS);
+
+                NodeApi.GetConnectedNodesResult result =
+                        Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+
+                List<Node> nodes = result.getNodes();
+
+                if (nodes.size() > 0)
+                    nodeId = nodes.get(0).getId();
+                googleApiClient.disconnect();
+                checkIfLogout();
+            }
+        }).start();
+    }
+
+    private void sendUserNameToWear(final String userName) {
+        final String json = "{\"user_name\": \"" + userName + "\"}";
+
+        if (nodeId != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (googleApiClient != null && !(googleApiClient.isConnected() || googleApiClient.isConnecting()))
+                        googleApiClient.blockingConnect(100, TimeUnit.MILLISECONDS);
+
+                    googleApiClient.blockingConnect(100, TimeUnit.MILLISECONDS);
+                    Wearable.MessageApi.sendMessage(googleApiClient, nodeId, Constants.USER_NAME, json.getBytes());
+                    googleApiClient.disconnect();
+                }
+            }).start();
+        }
+
+
     }
 }
 

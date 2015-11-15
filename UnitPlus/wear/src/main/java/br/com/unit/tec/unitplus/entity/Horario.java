@@ -8,7 +8,7 @@ public class Horario {
 
     private Long id;
 
-    private Long idUsuario;
+    private Usuario usuario;
 
     private Diciplina diciplina;
 
@@ -23,9 +23,8 @@ public class Horario {
     public Horario() {
     }
 
-    public Horario(Long id, Long idUsuario, Diciplina diciplina, Integer hora, Integer minutos, Integer diaSemana, String local) {
-        this.id = id;
-        this.idUsuario = idUsuario;
+    public Horario(Usuario usuario, Diciplina diciplina, Integer hora, Integer minutos, Integer diaSemana, String local) {
+        this.usuario = usuario;
         this.diciplina = diciplina;
         this.hora = hora;
         this.minutos = minutos;
@@ -33,8 +32,9 @@ public class Horario {
         this.local = local;
     }
 
-    public Horario(Long idUsuario, Diciplina diciplina, Integer hora, Integer minutos, Integer diaSemana, String local) {
-        this.idUsuario = idUsuario;
+    public Horario(Long id, Usuario usuario, Diciplina diciplina, Integer hora, Integer minutos, Integer diaSemana, String local) {
+        this.id = id;
+        this.usuario = usuario;
         this.diciplina = diciplina;
         this.hora = hora;
         this.minutos = minutos;
@@ -50,12 +50,12 @@ public class Horario {
         this.id = id;
     }
 
-    public Long getIdUsuario() {
-        return idUsuario;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setIdUsuario(Long idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Diciplina getDiciplina() {
