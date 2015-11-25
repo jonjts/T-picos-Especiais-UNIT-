@@ -65,10 +65,6 @@ public class HorarioActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 
     private static class PagerAdapter extends FragmentStatePagerAdapter {
 

@@ -15,7 +15,7 @@ import br.com.unit.tec.unitplus.entity.Nota;
  * Created by jon_j on 02/11/2015.
  */
 
-public class NotasAdapter extends RecyclerView.Adapter<NotasAdapter.ViewHolder> {
+public class NotasAdapter extends     RecyclerView.Adapter<NotasAdapter.ViewHolder> {
 
     List<Nota> mItems;
 

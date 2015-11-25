@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridViewPager;
 import android.util.Log;
@@ -31,7 +32,7 @@ import br.com.unit.tec.unitplus.entity.Element;
 import br.com.unit.tec.unitplus.util.Util;
 import br.com.unit.tec.unitplus.wearmenu.WearMenu;
 
-public class MainActivity extends Activity implements MessageApi.MessageListener{
+public class MainActivity extends WearableActivity implements MessageApi.MessageListener{
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -122,8 +123,6 @@ public class MainActivity extends Activity implements MessageApi.MessageListener
 
                 if (nodes.size() > 0)
                     nodeId = nodes.get(0).getId();
-
-                Log.v(LOG_TAG, "Node ID of phone: " + nodeId);
 
                 googleApiClient.disconnect();
             }

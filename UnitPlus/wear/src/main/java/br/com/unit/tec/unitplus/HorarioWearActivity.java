@@ -1,6 +1,5 @@
 package br.com.unit.tec.unitplus;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.DotsPageIndicator;
